@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-7">
+    <meta charset="UTF-7">
+    <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>お薬おトク判定ナビ 【77成分・完全版】</title>
     <style>
@@ -11,8 +12,29 @@
         .subtitle { font-size: 12px; color: #7f8c8d; text-align: center; margin-top: -8px; margin-bottom: 20px; }
         .form-group { margin-bottom: 20px; }
         label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #34495e; }
-        input[type="text"], select { width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 16px; transition: border 0.2s; }
-        input[type="text"]:focus, select:focus { border-color: #3498db; outline: none; }
+        
+        /* セレクトボックスの配置エリア */
+        .select-wrapper { position: relative; width: 100%; box-sizing: border-box; }
+        
+        /* ブラウザ標準の矢印をあえて消さずにコントロールすることで、
+           パソコンでは「右側や最適な位置」にリストがきれいに開くようになります。
+           2重の三角（▼）が出ないように完全に調整しました。
+        */
+        select { 
+            width: 100%; 
+            padding: 12px; 
+            padding-right: 30px; 
+            border: 2px solid #cbd5e1; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 16px; 
+            transition: border 0.2s;
+            background-color: #ffffff;
+            cursor: pointer;
+            color: #333;
+        }
+        select:focus { border-color: #3498db; outline: none; }
+        
         input[type="checkbox"] { width: auto; transform: scale(1.4); margin-right: 12px; }
         .checkbox-label { display: inline-flex; align-items: center; cursor: pointer; background: #f8fafc; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; border: 1px solid #e2e8f0; }
         
@@ -53,19 +75,23 @@
     <div class="subtitle">OTC類似薬（77成分）自己負担シミュレーター</div>
     
     <div class="form-group">
-        <label for="drugInput">お薬の名前、または成分名（カタカナで入力）：</label>
-        <input type="text" id="drugInput" list="drugList" placeholder="例：ロキソニン、アレグラ、ヒルドイド...">
-        <datalist id="drugList">
-            </datalist>
+        <label for="drugInput">お薬の名前、または成分名を選択してください：</label>
+        <div class="select-wrapper">
+            <select id="drugInput">
+                <option value="">▼ タップしてお薬を選ぶ...</option>
+                </select>
+        </div>
     </div>
 
     <div class="form-group">
         <label for="ratio">あなたの医療費負担割合：</label>
-        <select id="ratio">
-            <option value="0.3">3割負担（現役世代など）</option>
-            <option value="0.2">2割負担（一般高齢者など）</option>
-            <option value="0.1">1割負担（後期高齢者など）</option>
-        </select>
+        <div class="select-wrapper">
+            <select id="ratio">
+                <option value="0.3">3割負担（現役世代など）</option>
+                <option value="0.2">2割負担（一般高齢者など）</option>
+                <option value="0.1">1割負担（後期高齢者など）</option>
+            </select>
+        </div>
     </div>
 
     <div class="form-group">
@@ -157,13 +183,9 @@ var otcDrugs = [
     { search: "ロペラミド塩酸塩", name: "ロペラミド塩酸塩", brand: "ロペミン（下痢止め）" },
     { search: "ロペミン", name: "ロペラミド塩酸塩", brand: "ロペミン（下痢止め）" },
     { search: "ツムラ葛根湯", name: "葛根湯（かっこんとう）", brand: "漢方薬（風邪の初期など）" },
-    { search: "カッコントウ", name: "葛根湯（かっこんとう）", brand: "漢方薬（風邪の初期など）" },
     { search: "ツムラ小青竜湯", name: "小青竜湯（しょうせいりゅうとう）", brand: "漢方薬（花粉症・鼻水）" },
-    { search: "ショウせいりゅうとう", name: "小青竜湯（しょうせいりゅうとう）", brand: "漢方薬（花粉症・鼻水）" },
     { search: "ツムラ麦門冬湯", name: "麦門冬湯（ばくもんどうとう）", brand: "漢方薬（空咳・のど潤し）" },
-    { search: "バクもんどうとう", name: "麦門冬湯（ばくもんどうとう）", brand: "漢方薬（空咳・のど潤し）" },
     { search: "ツムラ芍薬甘草湯", name: "芍薬甘草湯（しゃくやくかんぞうとう）", brand: "漢方薬（こむら返り・足のつり）" },
-    { search: "シャクやくかんぞうとう", name: "芍薬甘草湯（しゃくやくかんぞうとう）", brand: "漢方薬（こむら返り・足のつり）" },
     { search: "ミコナゾール硝酸塩", name: "ミコナゾール硝酸塩", brand: "フロリード（水虫・カンジダ治療薬）" },
     { search: "クロトリマゾール", name: "クロトリマゾール", brand: "エンペシド（抗真菌薬）" },
     { search: "テルビナフィン塩酸塩", name: "テルビナフィン塩酸塩", brand: "ラミシール（水虫治療薬）" },
@@ -182,13 +204,13 @@ var otcDrugs = [
     { search: "ビタミンB12", name: "シアノコバラミン", brand: "メチコバール（末梢神経ケア・眼精疲労）" },
     { search: "メチコバール", name: "シアノコバラミン", brand: "メチコバール（末梢神経ケア・眼精疲労）" },
     { search: "ビタミンC", name: "アスコルビン酸", brand: "シナール（シミ・ビタミン補給）" },
-    { search: "シナール", name: "アスコルビン酸", brand: "シナール（シミ・ビタミン補補給）" },
+    { search: "シナール", name: "アスコルビン酸", brand: "シナール（シミ・ビタミン補給）" },
     { search: "ビタミンE", name: "トコフェロール酢酸エステル", brand: "ユベラ（血行促進）" },
     { search: "ユベラ", name: "トコフェロール酢酸エステル", brand: "ユベラ（血行促進）" }
 ];
 
 window.onload = function() {
-    var dl = document.getElementById("drugList");
+    var selectObj = document.getElementById("drugInput");
     var added = {};
     for (var i = 0; i < otcDrugs.length; i++) {
         var d = otcDrugs[i];
@@ -196,20 +218,22 @@ window.onload = function() {
         if (!added[displayName]) {
             var opt = document.createElement("option");
             opt.value = displayName;
-            dl.appendChild(opt);
+            opt.text = displayName;
+            selectObj.appendChild(opt);
             added[displayName] = true;
         }
     }
 };
 
 function calculateCost() {
-    var inputVal = document.getElementById("drugInput").value.trim();
+    var selectObj = document.getElementById("drugInput");
+    var inputVal = selectObj.options[selectObj.selectedIndex].value;
     var ratio = parseFloat(document.getElementById("ratio").value);
     var isExempt = document.getElementById("exempt").checked;
     var resultDiv = document.getElementById("result");
     
     if (!inputVal) {
-        alert("お薬の名前、またはキーワードを入力してください。");
+        alert("お薬を選択してください。");
         return;
     }
 
@@ -218,7 +242,8 @@ function calculateCost() {
     var foundDrug = null;
     for (var i = 0; i < otcDrugs.length; i++) {
         var d = otcDrugs[i];
-        if (inputVal.indexOf(d.name) !== -1 || inputVal.indexOf(d.search) !== -1 || d.brand.indexOf(inputVal) !== -1) {
+        var displayName = d.brand + " 【成分: " + d.name + "】";
+        if (inputVal === displayName) {
             foundDrug = d;
             break;
         }
@@ -236,9 +261,9 @@ function calculateCost() {
                               "窓口支払額の目安：<b>" + cost + " 円</b><br>";
         
         if (isExempt && foundDrug) {
-            resultDiv.innerHTML += "<p class='advice'>?? <b>Jemi-chan からの案内:</b><br>この薬は負担増の77成分に該当しますが、あなたが「免除対象」にチェックを入れているため、<b>特別料金は免除</b>されます。今まで通りの自己負担額で貰えるので、病院での処方がおトクです！</p>";
+            resultDiv.innerHTML += "<p class='advice'>💡 <b>Jemi-chan からの案内:</b><br>この薬は負担増の77成分に該当しますが、あなたが「免除対象」にチェックを入れているため、<b>特別料金は免除</b>されます。今まで通りの自己負担額で貰えるので、病院での処方がおトクです！</p>";
         } else {
-            resultDiv.innerHTML += "<p class='advice'>?? <b>Jemi-chan からの案内:</b><br>このお薬は今回の負担増（77成分）の<b>対象外</b>、または市販されていない特別な薬です。これまで通りの保険負担のみですので、安心して病院で処方してもらってください。</p>";
+            resultDiv.innerHTML += "<p class='advice'>💡 <b>Jemi-chan からの案内:</b><br>このお薬は今回の負担増（77成分）の<b>対象外</b>、または市販されていない特別な薬です。これまで通りの保険負担のみですので、安心して病院で処方してもらってください。</p>";
         }
     } 
     else {
@@ -265,11 +290,11 @@ function calculateCost() {
                               "成分名：<b>" + foundDrug.name + "</b><br><br>" +
                               "新しい窓口支払額の目安：<b>" + totalCost + " 円</b><br>" +
                               "<small>（従来より約 <span class='accent'>" + diff + " 円</span> 負担が増えます）</small>" +
-                              "<p class='advice'>?? <b>Jemi-chan のおトク極意：</b><br>" +
+                              "<p class='advice'>💡 <b>Jemi-chan のおトク極意：</b><br>" +
                               "このお薬はドラッグストアでも全く同じ成分の市販薬（OTC）が買えます！<br>" +
                               "病院の諸経費と天秤にかけて、ネットショップで実際の市販薬の価格をチェックしてみましょう！</p>" +
                               
-                              "<div class='shop-link-title'>?? 各ショップで市販薬の価格を調べる：</div>" +
+                              "<div class='shop-link-title'>🛒 各ショップで市販薬の価格を調べる：</div>" +
                               "<div class='shop-btn-container'>" +
                               "  <a href='" + matskiyourl + "' target='_blank' class='shop-btn btn-matsukiyo'>マツキヨ店</a>" +
                               "  <a href='" + welciaUrl + "' target='_blank' class='shop-btn btn-welcia'>ウエルシアで検索</a>" +
@@ -279,7 +304,7 @@ function calculateCost() {
 }
 
 function clearForm() {
-    document.getElementById("drugInput").value = "";  
+    document.getElementById("drugInput").selectedIndex = 0; 
     document.getElementById("ratio").selectedIndex = 0; 
     document.getElementById("exempt").checked = false;  
     
