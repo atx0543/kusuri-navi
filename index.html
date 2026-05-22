@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-   <meta charset="UTF-7">
+<meta charset="UTF-7">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>お薬おトク判定ナビ 【77成分・完全版】</title>
     <style>
@@ -11,31 +11,8 @@
         .subtitle { font-size: 12px; color: #7f8c8d; text-align: center; margin-top: -8px; margin-bottom: 20px; }
         .form-group { margin-bottom: 20px; }
         label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #34495e; }
-        
-        /* スマホ・パソコン共通で、きれいに右端に「▼」を出すための枠設定 */
-        .select-wrapper { position: relative; width: 100%; box-sizing: border-box; }
-        
-        /* どの画面でも同じ「▼」を1つだけ右端に配置 */
-        .select-wrapper::after { content: "▼"; font-size: 12px; color: #7f8c8d; position: absolute; right: 15px; top: 15px; pointer-events: none; }
-        
-        /* ブラウザ独自の矢印を消し去り、デザインを統一 */
-        select { 
-            width: 100%; 
-            padding: 12px; 
-            padding-right: 35px; 
-            border: 2px solid #cbd5e1; 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            font-size: 16px; 
-            transition: border 0.2s;
-            -webkit-appearance: none; /* iPhone用矢印消し */
-            -moz-appearance: none;    /* Firefox用矢印消し */
-            appearance: none;         /* 標準の矢印消し */
-            background-color: #ffffff;
-            cursor: pointer;
-        }
-        select:focus { border-color: #3498db; outline: none; }
-        
+        input[type="text"], select { width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 16px; transition: border 0.2s; }
+        input[type="text"]:focus, select:focus { border-color: #3498db; outline: none; }
         input[type="checkbox"] { width: auto; transform: scale(1.4); margin-right: 12px; }
         .checkbox-label { display: inline-flex; align-items: center; cursor: pointer; background: #f8fafc; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; border: 1px solid #e2e8f0; }
         
@@ -76,23 +53,19 @@
     <div class="subtitle">OTC類似薬（77成分）自己負担シミュレーター</div>
     
     <div class="form-group">
-        <label for="drugInput">お薬の名前、または成分名を選択してください：</label>
-        <div class="select-wrapper">
-            <select id="drugInput">
-                <option value="">▼ タップしてお薬を選ぶ...</option>
-                </select>
-        </div>
+        <label for="drugInput">お薬の名前、または成分名（カタカナで入力）：</label>
+        <input type="text" id="drugInput" list="drugList" placeholder="例：ロキソニン、アレグラ、ヒルドイド...">
+        <datalist id="drugList">
+            </datalist>
     </div>
 
     <div class="form-group">
         <label for="ratio">あなたの医療費負担割合：</label>
-        <div class="select-wrapper">
-            <select id="ratio">
-                <option value="0.3">3割負担（現役世代など）</option>
-                <option value="0.2">2割負担（一般高齢者など）</option>
-                <option value="0.1">1割負担（後期高齢者など）</option>
-            </select>
-        </div>
+        <select id="ratio">
+            <option value="0.3">3割負担（現役世代など）</option>
+            <option value="0.2">2割負担（一般高齢者など）</option>
+            <option value="0.1">1割負担（後期高齢者など）</option>
+        </select>
     </div>
 
     <div class="form-group">
@@ -184,9 +157,13 @@ var otcDrugs = [
     { search: "ロペラミド塩酸塩", name: "ロペラミド塩酸塩", brand: "ロペミン（下痢止め）" },
     { search: "ロペミン", name: "ロペラミド塩酸塩", brand: "ロペミン（下痢止め）" },
     { search: "ツムラ葛根湯", name: "葛根湯（かっこんとう）", brand: "漢方薬（風邪の初期など）" },
+    { search: "カッコントウ", name: "葛根湯（かっこんとう）", brand: "漢方薬（風邪の初期など）" },
     { search: "ツムラ小青竜湯", name: "小青竜湯（しょうせいりゅうとう）", brand: "漢方薬（花粉症・鼻水）" },
+    { search: "ショウせいりゅうとう", name: "小青竜湯（しょうせいりゅうとう）", brand: "漢方薬（花粉症・鼻水）" },
     { search: "ツムラ麦門冬湯", name: "麦門冬湯（ばくもんどうとう）", brand: "漢方薬（空咳・のど潤し）" },
+    { search: "バクもんどうとう", name: "麦門冬湯（ばくもんどうとう）", brand: "漢方薬（空咳・のど潤し）" },
     { search: "ツムラ芍薬甘草湯", name: "芍薬甘草湯（しゃくやくかんぞうとう）", brand: "漢方薬（こむら返り・足のつり）" },
+    { search: "シャクやくかんぞうとう", name: "芍薬甘草湯（しゃくやくかんぞうとう）", brand: "漢方薬（こむら返り・足のつり）" },
     { search: "ミコナゾール硝酸塩", name: "ミコナゾール硝酸塩", brand: "フロリード（水虫・カンジダ治療薬）" },
     { search: "クロトリマゾール", name: "クロトリマゾール", brand: "エンペシド（抗真菌薬）" },
     { search: "テルビナフィン塩酸塩", name: "テルビナフィン塩酸塩", brand: "ラミシール（水虫治療薬）" },
@@ -205,13 +182,13 @@ var otcDrugs = [
     { search: "ビタミンB12", name: "シアノコバラミン", brand: "メチコバール（末梢神経ケア・眼精疲労）" },
     { search: "メチコバール", name: "シアノコバラミン", brand: "メチコバール（末梢神経ケア・眼精疲労）" },
     { search: "ビタミンC", name: "アスコルビン酸", brand: "シナール（シミ・ビタミン補給）" },
-    { search: "シナール", name: "アスコルビン酸", brand: "シナール（シミ・ビタミン補給）" },
+    { search: "シナール", name: "アスコルビン酸", brand: "シナール（シミ・ビタミン補補給）" },
     { search: "ビタミンE", name: "トコフェロール酢酸エステル", brand: "ユベラ（血行促進）" },
     { search: "ユベラ", name: "トコフェロール酢酸エステル", brand: "ユベラ（血行促進）" }
 ];
 
 window.onload = function() {
-    var selectObj = document.getElementById("drugInput");
+    var dl = document.getElementById("drugList");
     var added = {};
     for (var i = 0; i < otcDrugs.length; i++) {
         var d = otcDrugs[i];
@@ -219,22 +196,20 @@ window.onload = function() {
         if (!added[displayName]) {
             var opt = document.createElement("option");
             opt.value = displayName;
-            opt.text = displayName;
-            selectObj.appendChild(opt);
+            dl.appendChild(opt);
             added[displayName] = true;
         }
     }
 };
 
 function calculateCost() {
-    var selectObj = document.getElementById("drugInput");
-    var inputVal = selectObj.options[selectObj.selectedIndex].value;
+    var inputVal = document.getElementById("drugInput").value.trim();
     var ratio = parseFloat(document.getElementById("ratio").value);
     var isExempt = document.getElementById("exempt").checked;
     var resultDiv = document.getElementById("result");
     
     if (!inputVal) {
-        alert("お薬を選択してください。");
+        alert("お薬の名前、またはキーワードを入力してください。");
         return;
     }
 
@@ -243,8 +218,7 @@ function calculateCost() {
     var foundDrug = null;
     for (var i = 0; i < otcDrugs.length; i++) {
         var d = otcDrugs[i];
-        var displayName = d.brand + " 【成分: " + d.name + "】";
-        if (inputVal === displayName) {
+        if (inputVal.indexOf(d.name) !== -1 || inputVal.indexOf(d.search) !== -1 || d.brand.indexOf(inputVal) !== -1) {
             foundDrug = d;
             break;
         }
@@ -305,7 +279,7 @@ function calculateCost() {
 }
 
 function clearForm() {
-    document.getElementById("drugInput").selectedIndex = 0; 
+    document.getElementById("drugInput").value = "";  
     document.getElementById("ratio").selectedIndex = 0; 
     document.getElementById("exempt").checked = false;  
     
