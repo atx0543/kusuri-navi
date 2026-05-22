@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="Shift_JIS">
+    <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>お薬おトク判定ナビ 【77成分・完全版】</title>
     <style>
@@ -38,11 +40,11 @@
         .shop-link-title { font-weight: bold; font-size: 14px; margin-top: 15px; margin-bottom: 8px; color: #2c3e50; }
         .shop-btn-container { display: flex; gap: 8px; flex-wrap: wrap; }
         .shop-btn { flex: 1; min-width: 120px; text-align: center; padding: 10px 8px; border-radius: 6px; font-size: 13px; font-weight: bold; text-decoration: none; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .btn-matsukiyo { background-color: #f1c40f; color: #333; } /* マツキヨ黄 */
+        .btn-matsukiyo { background-color: #f1c40f; color: #333; } 
         .btn-matsukiyo:hover { background-color: #d4ac0d; }
-        .btn-welcia { background-color: #1b4f72; } /* ウエルシア紺 */
+        .btn-welcia { background-color: #1b4f72; } 
         .btn-welcia:hover { background-color: #11334a; }
-        .btn-aoki { background-color: #c0392b; } /* アオキ赤 */
+        .btn-aoki { background-color: #c0392b; } 
         .btn-aoki:hover { background-color: #962d22; }
     </style>
 </head>
@@ -182,7 +184,7 @@ var otcDrugs = [
     { search: "ビタミンB12", name: "シアノコバラミン", brand: "メチコバール（末梢神経ケア・眼精疲労）" },
     { search: "メチコバール", name: "シアノコバラミン", brand: "メチコバール（末梢神経ケア・眼精疲労）" },
     { search: "ビタミンC", name: "アスコルビン酸", brand: "シナール（シミ・ビタミン補給）" },
-    { search: "シナール", name: "アスコルビン酸", brand: "シナール（シミ・ビタミン補給）" },
+    { search: "シナール", name: "アスコルビン酸", brand: "シナール（シミ・ビタミン補補給）" },
     { search: "ビタミンE", name: "トコフェロール酢酸エステル", brand: "ユベラ（血行促進）" },
     { search: "ユベラ", name: "トコフェロール酢酸エステル", brand: "ユベラ（血行促進）" }
 ];
@@ -255,7 +257,6 @@ function calculateCost() {
 
         var keyword = foundDrug.brand.split("（")[0];
         
-        // 各種URL（マツキヨが先頭にくるよう、下部ボタンの並び順と連動）
         var matskiyourl = "https://www.matsukiyo.co.jp/store/online/search?text=" + encodeURIComponent(keyword);
         var welciaUrl = "https://www.google.com/search?q=" + encodeURIComponent(keyword + " ウエルシアドットコム 市販薬");
         var aokiUrl = "https://www.google.com/search?q=" + encodeURIComponent(keyword + " クスリのアオキ ネットショップ");
