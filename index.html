@@ -236,9 +236,9 @@ function calculateCost() {
                               "窓口支払額の目安：<b>" + cost + " 円</b><br>";
         
         if (isExempt && foundDrug) {
-            resultDiv.innerHTML += "<p class='advice'>💡 <b>Jemi-chan からの案内:</b><br>この薬は負担増の77成分に該当しますが、あなたが「免除対象」にチェックを入れているため、<b>特別料金は免除</b>されます。今まで通りの自己負担額で貰えるので、病院での処方がおトクです！</p>";
+            resultDiv.innerHTML += "<p class='advice'>?? <b>Jemi-chan からの案内:</b><br>この薬は負担増の77成分に該当しますが、あなたが「免除対象」にチェックを入れているため、<b>特別料金は免除</b>されます。今まで通りの自己負担額で貰えるので、病院での処方がおトクです！</p>";
         } else {
-            resultDiv.innerHTML += "<p class='advice'>💡 <b>Jemi-chan からの案内:</b><br>このお薬は今回の負担増（77成分）の<b>対象外</b>、または市販されていない特別な薬です。これまで通りの保険負担のみですので、安心して病院で処方してもらってください。</p>";
+            resultDiv.innerHTML += "<p class='advice'>?? <b>Jemi-chan からの案内:</b><br>このお薬は今回の負担増（77成分）の<b>対象外</b>、または市販されていない特別な薬です。これまで通りの保険負担のみですので、安心して病院で処方してもらってください。</p>";
         }
     } 
     else {
@@ -265,11 +265,11 @@ function calculateCost() {
                               "成分名：<b>" + foundDrug.name + "</b><br><br>" +
                               "新しい窓口支払額の目安：<b>" + totalCost + " 円</b><br>" +
                               "<small>（従来より約 <span class='accent'>" + diff + " 円</span> 負担が増えます）</small>" +
-                              "<p class='advice'>💡 <b>Jemi-chan のおトク極意：</b><br>" +
+                              "<p class='advice'>?? <b>Jemi-chan のおトク極意：</b><br>" +
                               "このお薬はドラッグストアでも全く同じ成分の市販薬（OTC）が買えます！<br>" +
                               "病院の諸経費と天秤にかけて、ネットショップで実際の市販薬の価格をチェックしてみましょう！</p>" +
                               
-                              "<div class='shop-link-title'>🛒 各ショップで市販薬の価格を調べる：</div>" +
+                              "<div class='shop-link-title'>?? 各ショップで市販薬の価格を調べる：</div>" +
                               "<div class='shop-btn-container'>" +
                               "  <a href='" + matskiyourl + "' target='_blank' class='shop-btn btn-matsukiyo'>マツキヨ店</a>" +
                               "  <a href='" + welciaUrl + "' target='_blank' class='shop-btn btn-welcia'>ウエルシアで検索</a>" +
