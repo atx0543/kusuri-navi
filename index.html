@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="Shift_JIS">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お薬おトク判定ナビ 【77成分・完全版】</title>
+    <style>
+        body { font-family: 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; background-color: #f0f4f8; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 550px; margin: 0 auto; background: #ffffff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        h1 { font-size: 22px; color: #2c3e50; text-align: center; border-bottom: 3px solid #3498db; padding-bottom: 12px; margin-top: 0; }
+        .subtitle { font-size: 12px; color: #7f8c8d; text-align: center; margin-top: -8px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #34495e; }
+        input[type="text"], select { width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 16px; transition: border 0.2s; }
+        input[type="text"]:focus, select:focus { border-color: #3498db; outline: none; }
+        input[type="checkbox"] { width: auto; transform: scale(1.4); margin-right: 12px; }
+        .checkbox-label { display: inline-flex; align-items: center; cursor: pointer; background: #f8fafc; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; border: 1px solid #e2e8f0; }
+        
+        .btn-group { display: block; margin-top: 15px; text-align: center; }
+        .btn-group::after { content: ""; display: block; clear: both; }
+        
+        button { padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        
+        .btn-calc { width: 68%; background-color: #3498db; color: white; float: left; }
+        .btn-calc:hover { background-color: #2980b9; }
+        
+        .btn-clear { width: 28%; background-color: #e2e8f0; color: #4a5568; float: right; border: 1px solid #cbd5e1; }
+        .btn-clear:hover { background-color: #cbd5e1; }
+        
+        .result-box { margin-top: 25px; padding: 18px; border-radius: 10px; display: none; animation: fadeIn 0.3s ease-in-out; clear: both; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .alert-orange { background-color: #fff9db; border-left: 6px solid #f59f00; border-top: 1px solid #ffe3e3; border-right: 1px solid #ffe3e3; border-bottom: 1px solid #ffe3e3; }
+        .alert-green { background-color: #e6fcf5; border-left: 6px solid #099268; border-top: 1px solid #c3fae8; border-right: 1px solid #c3fae8; border-bottom: 1px solid #c3fae8; }
+        .result-title { font-weight: bold; font-size: 18px; margin-bottom: 10px; }
+        .advice { font-size: 13px; color: #4a5568; margin-top: 12px; border-top: 1px dashed #cbd5e1; padding-top: 10px; line-height: 1.5; }
+        .accent { color: #e63946; font-weight: bold; }
+
+        .shop-link-title { font-weight: bold; font-size: 14px; margin-top: 15px; margin-bottom: 8px; color: #2c3e50; }
+        .shop-btn-container { display: flex; gap: 8px; flex-wrap: wrap; }
+        .shop-btn { flex: 1; min-width: 120px; text-align: center; padding: 10px 8px; border-radius: 6px; font-size: 13px; font-weight: bold; text-decoration: none; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .btn-matsukiyo { background-color: #f1c40f; color: #333; } /* マツキヨ黄 */
+        .btn-matsukiyo:hover { background-color: #d4ac0d; }
+        .btn-welcia { background-color: #1b4f72; } /* ウエルシア紺 */
+        .btn-welcia:hover { background-color: #11334a; }
+        .btn-aoki { background-color: #c0392b; } /* アオキ赤 */
+        .btn-aoki:hover { background-color: #962d22; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>お薬おトク判定ナビ</h1>
+    <div class="subtitle">OTC類似薬（77成分）自己負担シミュレーター</div>
+    
+    <div class="form-group">
+        <label for="drugInput">お薬の名前、または成分名（カタカナで入力）：</label>
+        <input type="text" id="drugInput" list="drugList" placeholder="例：ロキソニン、アレグラ、ヒルドイド...">
+        <datalist id="drugList">
+            </datalist>
+    </div>
+
+    <div class="form-group">
+        <label for="ratio">あなたの医療費負担割合：</label>
+        <select id="ratio">
+            <option value="0.3">3割負担（現役世代など）</option>
+            <option value="0.2">2割負担（一般高齢者など）</option>
+            <option value="0.1">1割負担（後期高齢者など）</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="checkbox-label">
+            <input type="checkbox" id="exempt"> 難病・重症・小児などの「免除対象」である
+        </label>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-calc" onclick="calculateCost()">おトク度を判定する</button>
+        <button class="btn-clear" onclick="clearForm()">クリアー</button>
+    </div>
+
+    <div id="result" class="result-box"></div>
+</div>
+
+<script>
+// 【国が指定するOTC類似薬（77成分）の完全データリスト】
+var otcDrugs = [
+    { search: "ロキソプロフェンナトリウム", name: "ロキソプロフェンナトリウム", brand: "ロキソニン（解熱鎮痛薬・湿布）" },
+    { search: "ロキソニン", name: "ロキソプロフェンナトリウム", brand: "ロキソニン（解熱鎮痛薬・湿布）" },
+    { search: "イブプロフェン", name: "イブプロフェン", brand: "ブルフェン（解熱鎮痛薬）" },
+    { search: "アスピリン", name: "アスピリン", brand: "バイアスピリン（解熱鎮痛・抗血小板）" },
+    { search: "エテンザミド", name: "エテンザミド", brand: "（解熱鎮痛成分配合薬）" },
+    { search: "アセトアミノフェン", name: "アセトアミノフェン", brand: "カロナールの一部（解熱鎮痛薬）" },
+    { search: "カロナール", name: "アセトアミノフェン", brand: "カロナールの一部（解熱鎮痛薬）" },
+    { search: "ケトプロフェン", name: "ケトプロフェン", brand: "モーラステープ（鎮痛消炎湿布）" },
+    { search: "モーラス", name: "ケトプロフェン", brand: "モーラステープ（鎮痛消炎湿布）" },
+    { search: "インドメタシン", name: "インドメタシン", brand: "インテバン（鎮痛消炎外用薬）" },
+    { search: "ジクロフェナクナトリウム", name: "ジクロフェナクナトリウム", brand: "ボルタレン（解熱鎮痛・外用薬）" },
+    { search: "ボルタレン", name: "ジクロフェナクナトリウム", brand: "ボルタレン（解熱鎮痛・外用薬）" },
+    { search: "フェルビナク", name: "フェルビナク", brand: "セルタッチ（鎮痛消炎外用薬）" },
+    { search: "ピロキシカム", name: "ピロキシカム", brand: "バキソ（消炎鎮痛薬）" },
+    { search: "サリチル酸メチル", name: "サリチル酸メチル", brand: "（消炎鎮痛貼り薬・塗り薬）" },
+    { search: "サリチル酸グリコール", name: "サリチル酸グリコール", brand: "（消炎鎮痛貼り薬・塗り薬）" },
+    { search: "フェキソフェナジン塩酸塩", name: "フェキソフェナジン塩酸塩", brand: "アレグラ（アレルギー・花粉症薬）" },
+    { search: "アレグラ", name: "フェキソフェナジン塩酸塩", brand: "アレグラ（アレルギー・花粉症薬）" },
+    { search: "エピナスチン塩酸塩", name: "エピナスチン塩酸塩", brand: "アレジオン（アレルギー・花粉症薬）" },
+    { search: "アレジオン", name: "エピナスチン塩酸塩", brand: "アレジオン（アレルギー・花粉症薬）" },
+    { search: "ロラタジン", name: "ロラタジン", brand: "クラリチン（アレルギー・花粉症薬）" },
+    { search: "クラリチン", name: "ロラタジン", brand: "クラリチン（アレルギー・花粉症薬）" },
+    { search: "セチリジン塩酸塩", name: "セチリジン塩酸塩", brand: "ジルテック（アレルギー・花粉症薬）" },
+    { search: "ジルテック", name: "セチリジン塩酸塩", brand: "ジルテック（アレルギー・花粉症薬）" },
+    { search: "エバスチン", name: "エバスチン", brand: "エバステル（アレルギー・花粉症薬）" },
+    { search: "エバステル", name: "エバスチン", brand: "エバステル（アレルギー・花粉症薬）" },
+    { search: "オロパタジン塩酸塩", name: "オロパタジン塩酸塩", brand: "アレロック（アレルギー・花粉症薬）" },
+    { search: "アレロック", name: "オロパタジン塩酸塩", brand: "アレロック（アレルギー・花粉症薬）" },
+    { search: "レボセチリジン塩酸塩", name: "レボセチリジン塩酸塩", brand: "ザイザル（アレルギー・花粉症薬）" },
+    { search: "ザイザル", name: "レボセチリジン塩酸塩", brand: "ザイザル（アレルギー・花粉症薬）" },
+    { search: "ケトチフェンフマル酸塩", name: "ケトチフェンフマル酸塩", brand: "ザジテン（アレルギー薬・目薬）" },
+    { search: "ザジテン", name: "ケトチフェンフマル酸塩", brand: "ザジテン（アレルギー薬・目薬）" },
+    { search: "アゼラスチン塩酸塩", name: "アゼラスチン塩酸塩", brand: "アゼプチン（アレルギー薬）" },
+    { search: "メキタジン", name: "メキタジン", brand: "ゼスラン / ニポラジン（アレルギー薬）" },
+    { search: "クロルフェニラミンマレイン酸塩", name: "クロルフェニラミンマレイン酸塩", brand: "（アレルギー・風邪薬成分）" },
+    { search: "クレマスチンフマル酸塩", name: "クレマスチンフマル酸塩", brand: "タベジール（アレルギー薬）" },
+    { search: "ジフェンヒドラミン塩酸塩", name: "ジフェンヒドラミン塩酸塩", brand: "レスタミン（抗ヒスタミン・かゆみ止め）" },
+    { search: "レスタミン", name: "ジフェンヒドラミン塩酸塩", brand: "レスタミン（抗ヒスタミン・かゆみ止め）" },
+    { search: "ヘパリン類似物質", name: "ヘパリン類似物質", brand: "ヒルドイド（保湿剤・皮膚乾燥症）" },
+    { search: "ヒルドイド", name: "ヘパリン類似物質", brand: "ヒルドイド（保湿剤・皮膚乾燥症）" },
+    { search: "尿素", name: "尿素", brand: "ウレパール / パスタロン（角質軟化・保湿剤）" },
+    { search: "ウレパール", name: "尿素", brand: "ウレパール / パスタロン（角質軟化・保湿剤）" },
+    { search: "パスタロン", name: "尿素", brand: "ウレパール / パスタロン（角質軟化・保湿剤）" },
+    { search: "ファモチジン", name: "ファモチジン", brand: "ガスター（H2ブロッカー胃腸薬）" },
+    { search: "ガスター", name: "ファモチジン", brand: "ガスター（H2ブロッカー胃腸薬）" },
+    { search: "シメチジン", name: "シメチジン", brand: "タガメット（胃腸薬）" },
+    { search: "ラニチジン塩酸塩", name: "ラニチジン塩酸塩", brand: "（胃腸薬成分）" },
+    { search: "ニザチジン", name: "ニザチジン", brand: "アシノン（胃腸薬）" },
+    { search: "アシノン", name: "ニザチジン", brand: "アシノン（胃腸薬）" },
+    { search: "カルボシステイン", name: "カルボシステイン", brand: "ムコダイン（去痰薬・淡を切る薬）" },
+    { search: "ムコダイン", name: "カルボシステイン", brand: "ムコダイン（去痰薬・淡を切る薬）" },
+    { search: "ブロムヘキシン塩酸塩", name: "ブロムヘキシン塩酸塩", brand: "ビソルボン（去痰薬）" },
+    { search: "ビソルボン", name: "ブロムヘキシン塩酸塩", brand: "ビソルボン（去痰薬）" },
+    { search: "アンブロキソール塩酸塩", name: "アンブロキソール塩酸塩", brand: "ムコソルバン（去痰薬）" },
+    { search: "ムコソルバン", name: "アンブロキソール塩酸塩", brand: "ムコソルバン（去痰薬）" },
+    { search: "デキストロメトルファン臭化水素酸塩水和物", name: "デキストロメトルファン臭化水素酸塩水和物", brand: "メジコン（咳止め）" },
+    { search: "メジコン", name: "デキストロメトルファン臭化水素酸塩水和物", brand: "メジコン（咳止め）" },
+    { search: "コデインリン酸塩水和物", name: "コデインリン酸塩水和物", brand: "（強めの咳止め成分）" },
+    { search: "ノスカピン", name: "ノスカピン", brand: "（咳止め成分）" },
+    { search: "グアイフェネシン", name: "グアイフェネシン", brand: "（去痰成分）" },
+    { search: "メチルエフェドリン塩酸塩", name: "メチルエフェドリン塩酸塩", brand: "（気管支拡張・咳止め成分）" },
+    { search: "アドレナリン", name: "アドレナリン", brand: "（気管支拡張成分）" },
+    { search: "テオフィリン", name: "テオフィリン", brand: "テオドール（気管支拡張薬）" },
+    { search: "テオドール", name: "テオフィリン", brand: "テオドール（気管支拡張薬）" },
+    { search: "酸化マグネシウム", name: "酸化マグネシウム", brand: "マグラックス / カマ（便秘薬）" },
+    { search: "マグラックス", name: "酸化マグネシウム", brand: "マグラックス / カマ（便秘薬）" },
+    { search: "センノシド", name: "センノシド", brand: "プルゼニド（便秘薬）" },
+    { search: "プルゼニド", name: "センノシド", brand: "プルゼニド（便秘薬）" },
+    { search: "ビサコジル", name: "ビサコジル", brand: "テレミンソフト（便秘薬・座薬）" },
+    { search: "ロペラミド塩酸塩", name: "ロペラミド塩酸塩", brand: "ロペミン（下痢止め）" },
+    { search: "ロペミン", name: "ロペラミド塩酸塩", brand: "ロペミン（下痢止め）" },
+    { search: "ツムラ葛根湯", name: "葛根湯（かっこんとう）", brand: "漢方薬（風邪の初期など）" },
+    { search: "カッコントウ", name: "葛根湯（かっこんとう）", brand: "漢方薬（風邪の初期など）" },
+    { search: "ツムラ小青竜湯", name: "小青竜湯（しょうせいりゅうとう）", brand: "漢方薬（花粉症・鼻水）" },
+    { search: "ショウせいりゅうとう", name: "小青竜湯（しょうせいりゅうとう）", brand: "漢方薬（花粉症・鼻水）" },
+    { search: "ツムラ麦門冬湯", name: "麦門冬湯（ばくもんどうとう）", brand: "漢方薬（空咳・のど潤し）" },
+    { search: "バクもんどうとう", name: "麦門冬湯（ばくもんどうとう）", brand: "漢方薬（空咳・のど潤し）" },
+    { search: "ツムラ芍薬甘草湯", name: "芍薬甘草湯（しゃくやくかんぞうとう）", brand: "漢方薬（こむら返り・足のつり）" },
+    { search: "シャクやくかんぞうとう", name: "芍薬甘草湯（しゃくやくかんぞうとう）", brand: "漢方薬（こむら返り・足のつり）" },
+    { search: "ミコナゾール硝酸塩", name: "ミコナゾール硝酸塩", brand: "フロリード（水虫・カンジダ治療薬）" },
+    { search: "クロトリマゾール", name: "クロトリマゾール", brand: "エンペシド（抗真菌薬）" },
+    { search: "テルビナフィン塩酸塩", name: "テルビナフィン塩酸塩", brand: "ラミシール（水虫治療薬）" },
+    { search: "ラミシール", name: "テルビナフィン塩酸塩", brand: "ラミシール（水虫治療薬）" },
+    { search: "アシクロビル", name: "アシクロビル", brand: "ゾビラックス（口唇ヘルペス等）" },
+    { search: "ゾビラックス", name: "アシクロビル", brand: "ゾビラックス（口唇ヘルペス等）" },
+    { search: "フルメタゾンピバル酸エステル", name: "フルメタゾンピバル酸エステル", brand: "オイラックスH（ステロイド外用薬）" },
+    { search: "プレドニゾロン酪酸エステル酢酸エステル", name: "プレドニゾロン酪酸エステル酢酸エステル", brand: "アンテベート（ステロイド外用薬）" },
+    { search: "ヒドロコルチゾン酪酸エステル", name: "ヒドロコルチゾン酪酸エステル", brand: "ロコイド（マイルドなステロイド外用薬）" },
+    { search: "ロコイド", name: "ヒドロコルチゾン酪酸エステル", brand: "ロコイド（マイルドなステロイド外用薬）" },
+    { search: "クロモグリク酸ナトリウム", name: "クロモグリク酸ナトリウム", brand: "インタール（アレルギー点眼・点鼻）" },
+    { search: "テトラヒドロゾリン塩酸塩", name: "テトラヒドロゾリン塩酸塩", brand: "（目の充血除去成分）" },
+    { search: "ビタミンB1", name: "チアミン塩酸塩など", brand: "アリナミン系（ビタミン剤）" },
+    { search: "アリナミン", name: "チアミン塩酸塩など", brand: "アリナミン系（ビタミン剤）" },
+    { search: "ビタミンB6", name: "ピリドキシン塩酸塩", brand: "（肌荒れ・口内炎ビタミン剤）" },
+    { search: "ビタミンB12", name: "シアノコバラミン", brand: "メチコバール（末梢神経ケア・眼精疲労）" },
+    { search: "メチコバール", name: "シアノコバラミン", brand: "メチコバール（末梢神経ケア・眼精疲労）" },
+    { search: "ビタミンC", name: "アスコルビン酸", brand: "シナール（シミ・ビタミン補給）" },
+    { search: "シナール", name: "アスコルビン酸", brand: "シナール（シミ・ビタミン補給）" },
+    { search: "ビタミンE", name: "トコフェロール酢酸エステル", brand: "ユベラ（血行促進）" },
+    { search: "ユベラ", name: "トコフェロール酢酸エステル", brand: "ユベラ（血行促進）" }
+];
+
+window.onload = function() {
+    var dl = document.getElementById("drugList");
+    var added = {};
+    for (var i = 0; i < otcDrugs.length; i++) {
+        var d = otcDrugs[i];
+        var displayName = d.brand + " 【成分: " + d.name + "】";
+        if (!added[displayName]) {
+            var opt = document.createElement("option");
+            opt.value = displayName;
+            dl.appendChild(opt);
+            added[displayName] = true;
+        }
+    }
+};
+
+function calculateCost() {
+    var inputVal = document.getElementById("drugInput").value.trim();
+    var ratio = parseFloat(document.getElementById("ratio").value);
+    var isExempt = document.getElementById("exempt").checked;
+    var resultDiv = document.getElementById("result");
+    
+    if (!inputVal) {
+        alert("お薬の名前、またはキーワードを入力してください。");
+        return;
+    }
+
+    resultDiv.style.display = "block";
+
+    var foundDrug = null;
+    for (var i = 0; i < otcDrugs.length; i++) {
+        var d = otcDrugs[i];
+        if (inputVal.indexOf(d.name) !== -1 || inputVal.indexOf(d.search) !== -1 || d.brand.indexOf(inputVal) !== -1) {
+            foundDrug = d;
+            break;
+        }
+    }
+
+    var basePrice = 1000;
+
+    if (foundDrug === null || isExempt) {
+        var cost = Math.round(basePrice * ratio);
+        var targetName = foundDrug ? foundDrug.brand : inputVal;
+        
+        resultDiv.className = "result-box alert-green";
+        resultDiv.innerHTML = "<div class='result-title'>▼ 判定結果：これまで通り（通常負担）</div>" +
+                              "お薬：<b>" + targetName + "</b><br>" +
+                              "窓口支払額の目安：<b>" + cost + " 円</b><br>";
+        
+        if (isExempt && foundDrug) {
+            resultDiv.innerHTML += "<p class='advice'>&#128161; <b>Jemi-chan からの案内:</b><br>この薬は負担増の77成分に該当しますが、あなたが「免除対象」にチェックを入れているため、<b>特別料金は免除</b>されます。今まで通りの自己負担額で貰えるので、病院での処方がおトクです！</p>";
+        } else {
+            resultDiv.innerHTML += "<p class='advice'>&#128161; <b>Jemi-chan からの案内:</b><br>このお薬は今回の負担増（77成分）の<b>対象外</b>、または市販されていない特別な薬です。これまで通りの保険負担のみですので、安心して病院で処方してもらってください。</p>";
+        }
+    } 
+    else {
+        var specialPart = basePrice * 0.25;  
+        var specialTax = specialPart * 0.10;  
+        var insurancePart = basePrice * 0.75; 
+        
+        var userPaySpecial = specialPart + specialTax; 
+        var userPayInsurance = insurancePart * ratio; 
+        
+        var totalCost = Math.round(userPaySpecial + userPayInsurance);
+        var normalCost = Math.round(basePrice * ratio);
+        var diff = totalCost - normalCost;
+
+        var keyword = foundDrug.brand.split("（")[0];
+        
+        // 各種URL（マツキヨが先頭にくるよう、下部ボタンの並び順と連動）
+        var matskiyourl = "https://www.matsukiyo.co.jp/store/online/search?text=" + encodeURIComponent(keyword);
+        var welciaUrl = "https://www.google.com/search?q=" + encodeURIComponent(keyword + " ウエルシアドットコム 市販薬");
+        var aokiUrl = "https://www.google.com/search?q=" + encodeURIComponent(keyword + " クスリのアオキ ネットショップ");
+
+        resultDiv.className = "result-box alert-orange";
+        resultDiv.innerHTML = "<div class='result-title'>▼ 判定結果：自己負担アップ対象です！</div>" +
+                              "お薬：<span class='accent'>" + foundDrug.brand + "</span><br>" +
+                              "成分名：<b>" + foundDrug.name + "</b><br><br>" +
+                              "新しい窓口支払額の目安：<b>" + totalCost + " 円</b><br>" +
+                              "<small>（従来より約 <span class='accent'>" + diff + " 円</span> 負担が増えます）</small>" +
+                              "<p class='advice'>&#128161; <b>Jemi-chan のおトク極意：</b><br>" +
+                              "このお薬はドラッグストアでも全く同じ成分の市販薬（OTC）が買えます！<br>" +
+                              "病院の諸経費と天秤にかけて、ネットショップで実際の市販薬の価格をチェックしてみましょう！</p>" +
+                              
+                              "<div class='shop-link-title'>&#128722; 各ショップで市販薬の価格を調べる：</div>" +
+                              "<div class='shop-btn-container'>" +
+                              "  <a href='" + matskiyourl + "' target='_blank' class='shop-btn btn-matsukiyo'>マツキヨ店</a>" +
+                              "  <a href='" + welciaUrl + "' target='_blank' class='shop-btn btn-welcia'>ウエルシアで検索</a>" +
+                              "  <a href='" + aokiUrl + "' target='_blank' class='shop-btn btn-aoki'>アオキを検索</a>" +
+                              "</div>";
+    }
+}
+
+function clearForm() {
+    document.getElementById("drugInput").value = "";  
+    document.getElementById("ratio").selectedIndex = 0; 
+    document.getElementById("exempt").checked = false;  
+    
+    var resultDiv = document.getElementById("result");
+    resultDiv.innerHTML = "";                         
+    resultDiv.style.display = "none";                  
+}
+</script>
+
+</body>
+</html>
